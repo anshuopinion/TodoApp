@@ -77,7 +77,7 @@ export default function App() {
           </FormControl> */}
           <Formik initialValues={{todo: ''}} onSubmit={() => {}}>
             {({handleBlur, handleChange, values, errors, handleSubmit}) => (
-              <VStack p="4" space="4">
+              <VStack p="4" space="4" alignItems="flex-end">
                 <FormControl isInvalid={'todo' in errors}>
                   <FormControl.Label>Task</FormControl.Label>
                   <Input
@@ -92,14 +92,15 @@ export default function App() {
                     {errors.todo}
                   </FormControl.ErrorMessage>
                 </FormControl>
-                <Stack
-                  alignItems="flex-end"
-                  bg="red"
+
+                <Button
                   position="relative"
                   bottom="60"
-                  right="2">
-                  <Button onPress={handleSubmit}>Add Todo</Button>
-                </Stack>
+                  right="2"
+                  w="24"
+                  onPress={handleSubmit}>
+                  Add Todo
+                </Button>
               </VStack>
             )}
           </Formik>
