@@ -8,11 +8,11 @@ import {
   Input,
   ScrollView,
   Button,
-  Stack,
   VStack,
 } from 'native-base';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {Formik} from 'formik';
+import {TouchableWithoutFeedback} from 'react-native';
 export default function App() {
   const [todoLists, setTodoLists] = useState([
     {
@@ -30,17 +30,17 @@ export default function App() {
     };
     setTodoLists([...todoLists, newTodo]);
   };
-  console.log(todoLists);
+  // console.log(todoLists);
 
-  // const toggleTodo = (id: number) => {
-  //   const newTodoLists = todoLists.map(todo => {
-  //     if (todo.id === id) {
-  //       return {...todo, completed: !todo.completed};
-  //     }
-  //     return todo;
-  //   });
-  //   setTodoLists(newTodoLists);
-  // };
+  const toggleTodo = (id: number) => {
+    const newTodoLists = todoLists.map(todo => {
+      if (todo.id === id) {
+        return {...todo, completed: !todo.completed};
+      }
+      return todo;
+    });
+    setTodoLists(newTodoLists);
+  };
 
   return (
     <NativeBaseProvider>
@@ -51,31 +51,37 @@ export default function App() {
           </Text>
 
           <ScrollView>
-            {todoLists.map(todo => (
-              <Flex
-                mb="2"
-                p={4}
-                shadow="2"
-                bg="white"
-                mx="4"
-                borderRadius="sm"
-                key={todo.id}>
-                <Checkbox value="true" colorScheme="green">
-                  {todo.title}
-                </Checkbox>
-              </Flex>
-            ))}
+            {todoLists.map(todo => {
+              console.log(todo);
+
+              return (
+                <Flex
+                  mb="2"
+                  p={4}
+                  shadow="2"
+                  bg="white"
+                  mx="4"
+                  borderRadius="sm"
+                  key={todo.id}>
+                  <TouchableWithoutFeedback onPress={() => toggleTodo(todo.id)}>
+                    <Text
+                      textDecorationLine={
+                        todo.completed ? 'line-through' : 'none'
+                      }>
+                      {todo.title}
+                    </Text>
+                  </TouchableWithoutFeedback>
+                </Flex>
+              );
+            })}
           </ScrollView>
-          {/* <FormControl>
-            <Text>Add Todo</Text>
-            <Input
-              placeholder="Enter Todo"
-              onSubmitEditing={({nativeEvent}) =>
-                addTodo(nativeEvent.text.trim())
-              }
-            />
-          </FormControl> */}
-          <Formik initialValues={{todo: ''}} onSubmit={() => {}}>
+
+          <Formik
+            initialValues={{todo: ''}}
+            onSubmit={(values, {resetForm}) => {
+              addTodo(values.todo);
+              resetForm();
+            }}>
             {({handleBlur, handleChange, values, errors, handleSubmit}) => (
               <VStack p="4" space="4" alignItems="flex-end">
                 <FormControl isInvalid={'todo' in errors}>
